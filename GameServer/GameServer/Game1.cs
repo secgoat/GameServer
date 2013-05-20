@@ -24,6 +24,7 @@ namespace GameServer
         //add the different screens you want here 
         StartScreen startScreen; //basic start menu / first screen they see
         NetworkGameSelectScreen networkScreen; //the screen / menu to choose to join or host a network game
+        JoinNetworkGameScreen joinGameScreen;
         ActionScreen actionScreen; // right now this is the "Game" screen //TODO: change this to the Client
         BaseGameScreen activeScreen; //just a way to keep track of which screen is currently active
         PopUpScreen popUpScreen; // this is right now just a screen that says ar eyou sure you want to quit
@@ -32,6 +33,7 @@ namespace GameServer
         //textures for menu backgrounds etc.
         Texture2D popUpTexture;
         Texture2D actionScreentexture;
+        Texture2D blankBlackTexture;
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -55,16 +57,20 @@ namespace GameServer
 
             popUpTexture = Content.Load<Texture2D>("quitscreen");
             actionScreentexture = Content.Load<Texture2D>("greenmetal");
-
+            blankBlackTexture = Content.Load<Texture2D>("black");
             //initialize and start the scrrens
             startScreen = new StartScreen(this, spriteBatch, spriteFont);
             Components.Add(startScreen);
             startScreen.Hide();
 
-            networkScreen = new NetworkGameSelectScreen(this, spriteBatch,spriteFont);
+            networkScreen = new NetworkGameSelectScreen(this, spriteBatch,spriteFont, blankBlackTexture);
             Components.Add(networkScreen);
             networkScreen.Hide();
 
+            joinGameScreen = new JoinNetworkGameScreen(this, spriteBatch, spriteFont, blankBlackTexture);
+            Components.Add(joinGameScreen);
+            joinGameScreen.Hide();
+            
             actionScreen = new ActionScreen(this, spriteBatch, actionScreentexture);
             Components.Add(actionScreen);
             actionScreen.Hide();
@@ -75,6 +81,8 @@ namespace GameServer
 
             activeScreen = startScreen;
             activeScreen.Show();
+
+            IsMouseVisible = true;
 
 
         }
@@ -115,7 +123,7 @@ namespace GameServer
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
             spriteBatch.Begin();
@@ -164,6 +172,9 @@ namespace GameServer
                 if (networkScreen.SelectedIndex == 1)
                 {
                     //load join screen
+                    activeScreen.Hide();
+                    activeScreen = joinGameScreen;
+                    activeScreen.Show();
                 }
                 if (networkScreen.SelectedIndex == 2)
                 {

@@ -20,9 +20,10 @@ namespace GameServer.Screens
             set { menuComponent.SelectedIndex = value; }
         }
 
-        public NetworkGameSelectScreen(Game game, SpriteBatch spriteBatch, SpriteFont spriteFont)
+        public NetworkGameSelectScreen(Game game, SpriteBatch spriteBatch, SpriteFont spriteFont, Texture2D backgorund)
             : base(game, spriteBatch)
         {
+            image = backgorund;
             string[] menuItems = { "Host Game", "Join Game", "Back" };
 
             menuComponent = new MenuComponent(game, spriteBatch, spriteFont, menuItems);
@@ -38,7 +39,7 @@ namespace GameServer.Screens
 
         public override void Draw(GameTime gameTime)
         {
-            //spriteBatch.Draw(image, imageRectangle, Color.White);
+            spriteBatch.Draw(image, imageRectangle, Color.White);
             base.Draw(gameTime);
         }
     }
