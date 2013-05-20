@@ -21,11 +21,12 @@ namespace GameServer
 
         KeyboardState keyboardState;
         KeyboardState oldKeyboardState;
-        //add the different screens you want here
-        StartScreen startScreen;
-        ActionScreen actionScreen;
-        BaseGameScreen activeScreen;
-        PopUpScreen popUpScreen;
+        //add the different screens you want here 
+        StartScreen startScreen; //basic start menu / first screen they see
+        NetworkGameSelectScreen networkScreen; //the screen / menu to choose to join or host a network game
+        ActionScreen actionScreen; // right now this is the "Game" screen //TODO: change this to the Client
+        BaseGameScreen activeScreen; //just a way to keep track of which screen is currently active
+        PopUpScreen popUpScreen; // this is right now just a screen that says ar eyou sure you want to quit
 
 
         //textures for menu backgrounds etc.
@@ -60,6 +61,10 @@ namespace GameServer
             Components.Add(startScreen);
             startScreen.Hide();
 
+            networkScreen = new NetworkGameSelectScreen(this, spriteBatch,spriteFont);
+            Components.Add(networkScreen);
+            networkScreen.Hide();
+
             actionScreen = new ActionScreen(this, spriteBatch, actionScreentexture);
             Components.Add(actionScreen);
             actionScreen.Hide();
@@ -87,6 +92,11 @@ namespace GameServer
             if (activeScreen == startScreen)
             {
                 HandleStartScreen();
+            }
+
+            else if (activeScreen == networkScreen)
+            {
+                HandleNetworkSelectScreen();
             }
 
             else if (activeScreen == actionScreen)
@@ -129,12 +139,42 @@ namespace GameServer
                     activeScreen.Show();
                 }
 
-                if (startScreen.SelectedIndex == 3)
+                if (startScreen.SelectedIndex == 1)
+                {
+                    activeScreen.Hide();
+                    activeScreen = networkScreen;
+                    activeScreen.Show();
+                }
+
+                if (startScreen.SelectedIndex == 2)
                 {
                     this.Exit();
                 }
             }
         }
+
+        private void HandleNetworkSelectScreen()
+        {
+            if(CheckKey(Keys.Enter))
+            {
+                if (networkScreen.SelectedIndex == 0)
+                {
+                    //Load Host Screen
+                }
+                if (networkScreen.SelectedIndex == 1)
+                {
+                    //load join screen
+                }
+                if (networkScreen.SelectedIndex == 2)
+                {
+                    //go back to startScreen
+                    activeScreen.Hide();
+                    activeScreen = startScreen;
+                    activeScreen.Show();
+                }
+            }
+        }
+
         private void HandleActionScreen()
         {
             if (CheckKey(Keys.F1))

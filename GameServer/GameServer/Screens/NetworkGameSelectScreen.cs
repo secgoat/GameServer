@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace GameServer.Screens
 {
-    public class StartScreen : BaseGameScreen
+    public class NetworkGameSelectScreen : BaseGameScreen
     {
         MenuComponent menuComponent;
         Texture2D image;
@@ -20,11 +20,13 @@ namespace GameServer.Screens
             set { menuComponent.SelectedIndex = value; }
         }
 
-        public StartScreen(Game game, SpriteBatch spriteBatch, SpriteFont spriteFont)
+        public NetworkGameSelectScreen(Game game, SpriteBatch spriteBatch, SpriteFont spriteFont)
             : base(game, spriteBatch)
         {
-            string[] menuItems = { "Start Game","Network Game", "Exit"};
+            string[] menuItems = { "Host Game", "Join Game", "Back" };
+
             menuComponent = new MenuComponent(game, spriteBatch, spriteFont, menuItems);
+            
             Components.Add(menuComponent);
             imageRectangle = new Rectangle(0, 0, Game.Window.ClientBounds.Width, Game.Window.ClientBounds.Height);
         }

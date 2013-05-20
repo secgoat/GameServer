@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 
 namespace GameServer.Screens
 {
-    public class StartScreen : BaseGameScreen
+    class JoinNetworkGameScreen : BaseGameScreen
     {
         MenuComponent menuComponent;
         Texture2D image;
@@ -20,10 +19,10 @@ namespace GameServer.Screens
             set { menuComponent.SelectedIndex = value; }
         }
 
-        public StartScreen(Game game, SpriteBatch spriteBatch, SpriteFont spriteFont)
+        public JoinNetworkScreen(Game game, SpriteBatch spriteBatch, SpriteFont spriteFont)
             : base(game, spriteBatch)
         {
-            string[] menuItems = { "Start Game","Network Game", "Exit"};
+            string[] menuItems = { "Search LAN","Enter Address"};
             menuComponent = new MenuComponent(game, spriteBatch, spriteFont, menuItems);
             Components.Add(menuComponent);
             imageRectangle = new Rectangle(0, 0, Game.Window.ClientBounds.Width, Game.Window.ClientBounds.Height);
