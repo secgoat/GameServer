@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
 using GameServer.Screens;
+using FuchsGUI;
 
 namespace GameServer
 {
@@ -17,7 +18,7 @@ namespace GameServer
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        SpriteFont spriteFont;
+        SpriteFont spriteFont, formFont;
 
         KeyboardState keyboardState;
         KeyboardState oldKeyboardState;
@@ -54,11 +55,13 @@ namespace GameServer
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             spriteFont = Content.Load<SpriteFont>("font");
+            formFont = Content.Load<SpriteFont>("FormFont");
 
             popUpTexture = Content.Load<Texture2D>("quitscreen");
             actionScreentexture = Content.Load<Texture2D>("greenmetal");
             blankBlackTexture = Content.Load<Texture2D>("black");
-            //initialize and start the scrrens
+           
+            //initialize and start the screens
             startScreen = new StartScreen(this, spriteBatch, spriteFont);
             Components.Add(startScreen);
             startScreen.Hide();
@@ -67,8 +70,9 @@ namespace GameServer
             Components.Add(networkScreen);
             networkScreen.Hide();
 
-            joinGameScreen = new JoinNetworkGameScreen(this, spriteBatch, spriteFont, blankBlackTexture);
+            joinGameScreen = new JoinNetworkGameScreen(this, spriteBatch, formFont, blankBlackTexture);
             Components.Add(joinGameScreen);
+            joinGameScreen.ButtonClicked += new JoinNetworkGameScreen.ClickEvent(HandleJoinGameScreenButtons);
             joinGameScreen.Hide();
             
             actionScreen = new ActionScreen(this, spriteBatch, actionScreentexture);
@@ -105,6 +109,12 @@ namespace GameServer
             else if (activeScreen == networkScreen)
             {
                 HandleNetworkSelectScreen();
+            }
+
+            else if (activeScreen == joinGameScreen)
+            {
+                //not sure i need this as I am using delegates instead?
+                //HandleJoinGameScreen();
             }
 
             else if (activeScreen == actionScreen)
@@ -168,6 +178,8 @@ namespace GameServer
                 if (networkScreen.SelectedIndex == 0)
                 {
                     //Load Host Screen
+                    //for now just start the defualt server with defualt port
+                    //TODO: allow users to specify port number and maybe password on the host a game page
                 }
                 if (networkScreen.SelectedIndex == 1)
                 {
@@ -183,6 +195,20 @@ namespace GameServer
                     activeScreen = startScreen;
                     activeScreen.Show();
                 }
+            }
+        }
+
+        private void HandleJoinGameScreenButtons(Control sender)
+        {
+            if (sender.Name == "ScanLan")
+            {
+                //TODO: do a network autodisovery
+                Console.WriteLine("SCAN LAN!");
+            }
+            if (sender.Name == "Connect")
+            {
+                //TODO: grab ip and port and try a discover known peers
+                Console.WriteLine("Connect to {0}:{1}", joinGameScreen.Address, joinGameScreen.Port);
             }
         }
 
