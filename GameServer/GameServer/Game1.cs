@@ -10,7 +10,12 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
 using GameServer.Screens;
+using GameServer.Server;
+using GameServer.Client;
+
 using FuchsGUI;
+using Lidgren.Network;
+using System.Threading;
 
 namespace GameServer
 {
@@ -35,6 +40,15 @@ namespace GameServer
         Texture2D popUpTexture;
         Texture2D actionScreentexture;
         Texture2D blankBlackTexture;
+
+        //Network pieces
+        
+        Client.Client client;
+        Server.Server server;
+        //NetClient client;
+        //NetServer server;
+        Thread serverThread;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -82,6 +96,8 @@ namespace GameServer
             popUpScreen = new PopUpScreen(this, spriteBatch, spriteFont, popUpTexture);
             Components.Add(popUpScreen);
             popUpScreen.Hide();
+
+
 
             activeScreen = startScreen;
             activeScreen.Show();
@@ -141,6 +157,32 @@ namespace GameServer
             spriteBatch.End();
         }
 
+        protected override void OnExiting(object sender, EventArgs args)
+        {
+            client.Shutdown("bye");
+            server.Shutdown("Bye");
+            base.OnExiting(sender, args);
+        }
+
+        void StartLocalServer()
+        {
+            
+            string configName = "LocalGame";
+            server = new Server.Server(this, spriteBatch, configName);
+            Components.Add(server);
+            //server.Hide();
+            StartClient(configName);
+        }
+
+        void StartClient(string configName)
+        {
+            client = new Client.Client(this, spriteBatch, configName);
+            Components.Add(client);
+            activeScreen.Hide();
+            activeScreen = client;
+            activeScreen.Show();
+        }
+
         private bool CheckKey(Keys key)
         {
             return keyboardState.IsKeyUp(key) && oldKeyboardState.IsKeyDown(key);
@@ -150,21 +192,22 @@ namespace GameServer
         {
             if (CheckKey(Keys.Enter))
             {
-                if (startScreen.SelectedIndex == 0)
+                if (startScreen.SelectedIndex == 0) //start
                 {
-                    activeScreen.Hide();
-                    activeScreen = actionScreen;
-                    activeScreen.Show();
+                    StartLocalServer();
+                    //activeScreen.Hide();
+                    //activeScreen = actionScreen;
+                    //activeScreen.Show();
                 }
 
-                if (startScreen.SelectedIndex == 1)
+                if (startScreen.SelectedIndex == 1) //Multiplayer game
                 {
                     activeScreen.Hide();
                     activeScreen = networkScreen;
                     activeScreen.Show();
                 }
 
-                if (startScreen.SelectedIndex == 2)
+                if (startScreen.SelectedIndex == 2) //quit
                 {
                     this.Exit();
                 }
@@ -203,6 +246,7 @@ namespace GameServer
             if (sender.Name == "ScanLan")
             {
                 //TODO: do a network autodisovery
+                StartClient("LocalGame");
                 Console.WriteLine("SCAN LAN!");
             }
             if (sender.Name == "Connect")
@@ -222,6 +266,7 @@ namespace GameServer
                 activeScreen.Show();
             }
         }
+       
         private void HandlePopUpScreen()
         {
             if (CheckKey(Keys.Enter))
