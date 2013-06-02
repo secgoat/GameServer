@@ -14,8 +14,8 @@ namespace GameServer.Client
 {
     class Client : BaseGameScreen
     {
-        Game game;
-        SpriteBatch spriteBatch;
+       // Game game;
+        //SpriteBatch spriteBatch;
         SpriteFont font;
         
         Texture2D[] textures;
@@ -24,18 +24,32 @@ namespace GameServer.Client
         NetClient client;
         NetPeerConfiguration config;
 
+        string address;
+        int port;
+
+        public enum GameType
+        {
+            local,
+            scanLan,
+            hosted
+        };
+        GameType gameType;
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="game"></param>
         /// <param name="spriteBatch"></param>
         /// <param name="configName"></param>
-        public Client(Game game, SpriteBatch spriteBatch, string configName)
+        public Client(Game game, SpriteBatch spriteBatch, string configName, GameType gameType = GameType.local, string address = "127.0.0.1", int port = 14242)
             : base(game, spriteBatch)
         {
             this.game = game;
             this.spriteBatch = spriteBatch;
 
+            this.address = address;
+            this.port = port;
+            this.gameType = gameType;
             config = new NetPeerConfiguration(configName);
             config.EnableMessageType(NetIncomingMessageType.DiscoveryResponse);
             client = new NetClient(config);
@@ -45,7 +59,24 @@ namespace GameServer.Client
 
         public override void Initialize()
         {
-            client.DiscoverLocalPeers(14242);
+             //client.DiscoverKnownPeer("127.0.0.1", 14242);
+            //client.DiscoverLocalPeers(this.port);
+            //TODO: change Discoverlocla peers to better relflect if local game vs network game, maybe just do discover known peer with IP?
+            switch (gameType)
+            {
+                case GameType.local:
+                    client.DiscoverKnownPeer("127.0.0.1", 14242);
+                    break;
+                case GameType.scanLan:
+                    client.DiscoverLocalPeers(this.port);
+                    break;
+                case GameType.hosted:
+                    client.DiscoverKnownPeer(this.address, this.port);
+                    break;
+                default:
+                    client.DiscoverLocalPeers(this.port);
+                    break;
+            }
             base.Initialize();
         }
 
@@ -109,6 +140,7 @@ namespace GameServer.Client
                 {
                     case NetIncomingMessageType.DiscoveryResponse:
                         // just connect to first server discovered
+                        //TODO: connect to first discovered server if single player, other wise display list of responses and let player choose
                         client.Connect(msg.SenderEndPoint);
                         break;
                     case NetIncomingMessageType.Data:

@@ -18,6 +18,8 @@ namespace GameServer.Server
         NetServer server;
         double nextSendUpdates, now;
         List<String> messages;
+        bool localGame;
+        Client.Client.GameType gameType;
 
         /// <summary>
         /// 
@@ -25,8 +27,9 @@ namespace GameServer.Server
         /// <param name="game"></param>
         /// <param name="spriteBatch"></param>
         /// <param name="configName"></param>
+        /// <param name="maxConnections"></param>
         /// <param name="port"></param>
-        public Server(Game game, SpriteBatch spriteBatch, string configName, int port = 14242)
+        public Server(Game game, SpriteBatch spriteBatch, string configName,int maxConnections,int port = 14242)
             : base(game, spriteBatch)
         {
              messages = new List<String>();
@@ -35,7 +38,7 @@ namespace GameServer.Server
             config = new NetPeerConfiguration(configName);
             config.EnableMessageType(NetIncomingMessageType.DiscoveryRequest);
             config.Port = port;
-
+            config.MaximumConnections = maxConnections;
             //create and start server
             server = new NetServer(config);
             server.Start();

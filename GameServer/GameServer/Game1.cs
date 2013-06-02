@@ -31,6 +31,7 @@ namespace GameServer
         StartScreen startScreen; //basic start menu / first screen they see
         NetworkGameSelectScreen networkScreen; //the screen / menu to choose to join or host a network game
         JoinNetworkGameScreen joinGameScreen;
+        HostNetworkGameScreen hostGameScreen;
         ActionScreen actionScreen; // right now this is the "Game" screen //TODO: change this to the Client
         BaseGameScreen activeScreen; //just a way to keep track of which screen is currently active
         PopUpScreen popUpScreen; // this is right now just a screen that says ar eyou sure you want to quit
@@ -44,22 +45,21 @@ namespace GameServer
         //Network pieces
         
         Client.Client client;
+        Client.Client.GameType gameType; //use this enum to tell client if local, join lan or hosted game
+
         Server.Server server;
-        //NetClient client;
-        //NetServer server;
-        Thread serverThread;
+        string gameConfigName;
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            gameConfigName = "GameServer";
         }
 
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
             base.Initialize();
         }
 
@@ -88,6 +88,11 @@ namespace GameServer
             Components.Add(joinGameScreen);
             joinGameScreen.ButtonClicked += new JoinNetworkGameScreen.ClickEvent(HandleJoinGameScreenButtons);
             joinGameScreen.Hide();
+
+            hostGameScreen = new HostNetworkGameScreen(this, spriteBatch, spriteFont, blankBlackTexture);
+            Components.Add(hostGameScreen);
+            hostGameScreen.ButtonClicked += new HostNetworkGameScreen.ClickEvent(HandleHostGameScreenButtons);
+            hostGameScreen.Hide();
             
             actionScreen = new ActionScreen(this, spriteBatch, actionScreentexture);
             Components.Add(actionScreen);
@@ -110,7 +115,6 @@ namespace GameServer
 
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
         }
 
 
@@ -151,12 +155,11 @@ namespace GameServer
         {
             GraphicsDevice.Clear(Color.Black);
 
-            // TODO: Add your drawing code here
             spriteBatch.Begin();
             base.Draw(gameTime);
             spriteBatch.End();
         }
-
+        
         protected override void OnExiting(object sender, EventArgs args)
         {
             client.Shutdown("bye");
@@ -164,19 +167,24 @@ namespace GameServer
             base.OnExiting(sender, args);
         }
 
-        void StartLocalServer()
+        void StartServer(Client.Client.GameType gameType)
         {
-            
-            string configName = "LocalGame";
-            server = new Server.Server(this, spriteBatch, configName);
+            //TODO: allow users hosting network game to choose max number of players
+            int maxConnections = 0;
+            if (gameType == Client.Client.GameType.local)
+                maxConnections = 1;
+            else
+                maxConnections = 10;
+
+            server = new Server.Server(this, spriteBatch, gameConfigName, maxConnections);
             Components.Add(server);
             //server.Hide();
-            StartClient(configName);
+            StartClient();
         }
 
-        void StartClient(string configName)
+        void StartClient()
         {
-            client = new Client.Client(this, spriteBatch, configName);
+            client = new Client.Client(this, spriteBatch, gameConfigName, this.gameType);
             Components.Add(client);
             activeScreen.Hide();
             activeScreen = client;
@@ -194,7 +202,8 @@ namespace GameServer
             {
                 if (startScreen.SelectedIndex == 0) //start
                 {
-                    StartLocalServer();
+                    gameType = Client.Client.GameType.local;
+                    StartServer(gameType);
                     //activeScreen.Hide();
                     //activeScreen = actionScreen;
                     //activeScreen.Show();
@@ -220,9 +229,9 @@ namespace GameServer
             {
                 if (networkScreen.SelectedIndex == 0)
                 {
+                    gameType = Client.Client.GameType.hosted;
                     //Load Host Screen
                     //for now just start the defualt server with defualt port
-                    //TODO: allow users to specify port number and maybe password on the host a game page
                 }
                 if (networkScreen.SelectedIndex == 1)
                 {
@@ -245,15 +254,27 @@ namespace GameServer
         {
             if (sender.Name == "ScanLan")
             {
-                //TODO: do a network autodisovery
-                StartClient("LocalGame");
+                //TODO: Only start client if local game is found
+                gameType = Client.Client.GameType.scanLan;
+                StartClient();
                 Console.WriteLine("SCAN LAN!");
             }
-            if (sender.Name == "Connect")
+            if (sender.Name == "Connect") //Join a network game by address
             {
+                gameType = Client.Client.GameType.hosted;
                 //TODO: grab ip and port and try a discover known peers
                 Console.WriteLine("Connect to {0}:{1}", joinGameScreen.Address, joinGameScreen.Port);
             }
+        }
+
+        private void HandleHostGameScreenButtons(Control sender)
+        {
+            if (sender.Name == "Start")
+            {
+                gameType = Client.Client.GameType.hosted;
+                StartServer(gameType);
+            }
+
         }
 
         private void HandleActionScreen()
