@@ -230,6 +230,9 @@ namespace GameServer
                 if (networkScreen.SelectedIndex == 0)
                 {
                     gameType = Client.Client.GameType.hosted;
+                    activeScreen.Hide();
+                    activeScreen = hostGameScreen;
+                    activeScreen.Show();
                     //Load Host Screen
                     //for now just start the defualt server with defualt port
                 }

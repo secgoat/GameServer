@@ -77,6 +77,11 @@ namespace GameServer.Screens
             }
         }
 
+        public virtual void Pause()
+        {
+            this.Enabled = false;
+        }
+
     }
 }
 

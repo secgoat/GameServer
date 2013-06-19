@@ -90,8 +90,8 @@ namespace GameServer.Screens
         {
             if (ButtonClicked != null)
             {
-                this.MaxConnections = textBoxMaxConnections.Text;
-                this.Port = textBoxPort.Text;
+                this.MaxConnections = Int32.Parse(textBoxMaxConnections.Text);
+                this.Port = Int32.Parse(textBoxPort.Text);
                 this.ButtonClicked(sender);
             }
         }
