@@ -52,7 +52,11 @@ namespace MonoGameServer
 
         public Game1()
         {
-            graphics = new GraphicsDeviceManager(this);
+            try
+            {
+                graphics = new GraphicsDeviceManager(this);
+            }
+            catch { }
             Content.RootDirectory = "Content";
             gameConfigName = "GameServer";
         }
