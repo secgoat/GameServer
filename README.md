@@ -14,3 +14,12 @@ The Libraries I am currently using are:
 Lidgren Network Library: http://code.google.com/p/lidgren-network-gen3/
 
 FuchsGUI: http://ghoshehsoft.wordpress.com/2011/02/11/xna-fuchsgui-part-i/
+
+as of 06/20/2013 I have ported this project over to use MonoGame I had to
+rebuild LidgrenXNAExtensions to use MonoGame as well as FuchsGUI.
+
+Still having trouble gettign MonoGame Content project to work right so I
+went with https://xnacontentcompiler.codeplex.com/ to compile the assets
+into xnb format, and uploaded them into the MonoGame Content folder in my
+game project.
+
