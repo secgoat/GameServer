@@ -74,7 +74,6 @@
     <Content Include="Lidgren.Network.Xna.dll" />
     <Content Include="SDL.dll" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Dropbox\XNA Game Engine files\FuchsMonoGUI\FuchsMonoGUI.csproj">
       <Project>{14D8A181-6EFA-4042-906E-2742C5EBFB7C}</Project>

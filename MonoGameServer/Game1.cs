@@ -166,8 +166,11 @@ namespace MonoGameServer
         
         protected override void OnExiting(object sender, EventArgs args)
         {
-            client.Shutdown("bye");
-            server.Shutdown("Bye");
+            if(client != null)
+                client.Shutdown("bye");
+
+            if(server != null)
+                server.Shutdown("Bye");
             base.OnExiting(sender, args);
         }
 
