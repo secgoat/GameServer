@@ -14,10 +14,7 @@ namespace MonoGameServer.Client
 {
     class Client : BaseGameScreen
     {
-       // Game game;
-        //SpriteBatch spriteBatch;
         SpriteFont font;
-        
         Texture2D[] textures;
         Dictionary<long, Vector2> positions = new Dictionary<long, Vector2>();
         List<String> messages = new List<String>();
@@ -59,9 +56,7 @@ namespace MonoGameServer.Client
 
         public override void Initialize()
         {
-             //client.DiscoverKnownPeer("127.0.0.1", 14242);
-            //client.DiscoverLocalPeers(this.port);
-            //TODO: change Discoverlocla peers to better relflect if local game vs network game, maybe just do discover known peer with IP?
+            //gametype comes from join / host network game screens and tells the client how to look for the game
             switch (gameType)
             {
                 case GameType.local:

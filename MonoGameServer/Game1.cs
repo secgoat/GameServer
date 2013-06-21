@@ -93,7 +93,7 @@ namespace MonoGameServer
             joinGameScreen.ButtonClicked += new JoinNetworkGameScreen.ClickEvent(HandleJoinGameScreenButtons);
             joinGameScreen.Hide();
 
-            hostGameScreen = new HostNetworkGameScreen(this, spriteBatch, spriteFont, blankBlackTexture);
+            hostGameScreen = new HostNetworkGameScreen(this, spriteBatch, formFont, blankBlackTexture);
             Components.Add(hostGameScreen);
             hostGameScreen.ButtonClicked += new HostNetworkGameScreen.ClickEvent(HandleHostGameScreenButtons);
             hostGameScreen.Hide();
@@ -176,12 +176,11 @@ namespace MonoGameServer
 
         void StartServer(Client.Client.GameType gameType)
         {
-            //TODO: allow users hosting network game to choose max number of players
             int maxConnections = 0;
             if (gameType == Client.Client.GameType.local)
                 maxConnections = 1;
             else
-                maxConnections = 10;
+                maxConnections = Int32.Parse(hostGameScreen.MaxConnections);
 
             server = new Server.Server(this, spriteBatch, gameConfigName, maxConnections);
             Components.Add(server);
@@ -272,7 +271,6 @@ namespace MonoGameServer
             if (sender.Name == "Connect") //Join a network game by address
             {
                 gameType = Client.Client.GameType.hosted;
-                //TODO: grab ip and port and try a discover known peers
                 Console.WriteLine("Connect to {0}:{1}", joinGameScreen.Address, joinGameScreen.Port);
             }
         }

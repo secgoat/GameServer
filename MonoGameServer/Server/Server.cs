@@ -33,8 +33,8 @@ namespace MonoGameServer.Server
             : base(game, spriteBatch)
         {
              messages = new List<String>();
-            //set up config for server base don user options
-            //TODO: if single player have a randomly generated config name so that only local user can connect? either that or set single player flag and DisableMessageType.DiscoveryResponse after local host connects.
+            //set up config for server based on user options
+            //maxconncetiosn shoudlbe 1 on single player and more on multiplayer
             config = new NetPeerConfiguration(configName);
             config.EnableMessageType(NetIncomingMessageType.DiscoveryRequest);
             config.Port = port;
