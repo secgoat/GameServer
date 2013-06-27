@@ -19,12 +19,14 @@ namespace MonoGameServer.Screens
         protected Game game; //use this to keep track of the over all game, when state is passed to this instance of screen we need to knwo where to go back to
         //protected SpriteBatch spriteBatch; //obvious, since this is a drawable game comopnent we need to have a sprite batch to draw with.
         protected SpriteBatch spriteBatch;
+        protected Rectangle windowSize;
         public List<GameComponent> Components { get { return components; } }
 
         public BaseGameScreen(Game game, SpriteBatch spriteBatch)
             : base(game)
         {
             this.game = game; //set local game variable to initial game
+            this.windowSize = game.GraphicsDevice.Viewport.Bounds;
             this.spriteBatch = spriteBatch; // also synch local spritebacth to initial game spritebatch
         }
 

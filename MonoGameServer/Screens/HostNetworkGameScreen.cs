@@ -11,54 +11,6 @@ using Microsoft.Xna.Framework.Content;
 
 namespace MonoGameServer.Screens
 {
-
-    public sealed class HostGameForm : Form
-    {
-        ContentManager contentManager;
-
-        #region Fields
-
-        public TextBox PortBox;
-        public TextBox MaxConnectionsBox;
-        public Button connectButton;
-        public Label portLabel;
-        public Label addressLabel;
-
-        #endregion
-
-        public HostGameForm(Texture2D texture, SpriteFont font, Color foreColor, ContentManager contentManager)
-            : base("HostGameControls", "Host A Game", new Rectangle(121, 200, 425, 200), texture, font, foreColor)
-        {
-            this.contentManager = contentManager;
-            this.AddControls();
-        }
-
-        void AddControls()
-        {
-            Texture2D texTextBox = contentManager.Load<Texture2D>(@"textboxTexture");
-            Texture2D texButton = contentManager.Load<Texture2D>(@"buttonTexture");
-
-
-            PortBox = new TextBox("Port", @"", 32767, "14242", new Rectangle(19, 125, 60, 20), texTextBox, font, new Color(0, 0, 0));
-            this.AddControl(PortBox);
-
-            MaxConnectionsBox = new TextBox("MaxConnections", @"", 32767, "10", new Rectangle(19, 76, 60, 20), texTextBox, font, new Color(0, 0, 0));
-            this.AddControl(MaxConnectionsBox);
-
-            connectButton = new Button("connectButton", @"Start Game", new Rectangle(19, 160, 75, 23), texButton, font, new Color(0, 0, 0));
-            this.AddControl(connectButton);
-           
-
-            portLabel = new Label("portLabel", @"Port", new Vector2(16, 109), font, new Color(0, 0, 0), 0, 0);
-            this.AddControl(portLabel);
-
-            addressLabel = new Label("addressLabel", @"Max Connections", new Vector2(16, 60), font, new Color(0, 0, 0), 0, 0);
-            this.AddControl(addressLabel);
-
-
-        }
-    }
-
     class HostNetworkGameScreen : BaseGameScreen
     {
 

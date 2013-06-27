@@ -34,7 +34,9 @@ namespace MonoGameServer.Screens
         {
             this.background = background;
             formBackground = game.Content.Load<Texture2D>("alienmetal");
-            connectionMethodForm = new Form("Connect", "Connection Metod", new Rectangle(100, 100, 350, 350), formBackground, spriteFont, Color.White);
+            Vector2 formSize = new Vector2(350, 350);
+            Vector2 center = new Vector2((this.windowSize.Width - formSize.X) / 2, (this.windowSize.Height - formSize.Y) / 2);
+            connectionMethodForm = new Form("Connect", "Connection Metod", new Rectangle((int)center.X, (int)center.Y,(int) formSize.X, (int)formSize.Y), formBackground, spriteFont, Color.White);
             
             buttonTexture = game.Content.Load<Texture2D>("buttonTexture");
             textboxTexture = game.Content.Load<Texture2D>("textboxTexture");

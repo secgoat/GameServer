@@ -21,6 +21,8 @@ namespace MonoGameServer
 {
     public class Game1 : Microsoft.Xna.Framework.Game
     {
+
+        
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         SpriteFont spriteFont, formFont;
@@ -43,12 +45,16 @@ namespace MonoGameServer
         Texture2D blankBlackTexture;
 
         //Network pieces
-        
         Client.Client client;
         Client.Client.GameType gameType; //use this enum to tell client if local, join lan or hosted game
 
         Server.Server server;
         string gameConfigName;
+
+
+        //screensize to pass in for menus for positioning
+        Rectangle screenSize;
+        public Rectangle ScreenSize { get; private set; }
 
         public Game1()
         {
@@ -59,6 +65,7 @@ namespace MonoGameServer
             catch { }
             Content.RootDirectory = "Content";
             gameConfigName = "GameServer";
+            ScreenSize = this.GraphicsDevice.Viewport.Bounds;
         }
 
 
@@ -80,12 +87,14 @@ namespace MonoGameServer
             blankBlackTexture = Content.Load<Texture2D>("black");
            
             //initialize and start the screens
-            startScreen = new StartScreen(this, spriteBatch, spriteFont);
+            startScreen = new StartScreen(this, spriteBatch, formFont);
             Components.Add(startScreen);
+            startScreen.ButtonClicked += new StartScreen.ClickEvent(HandleStartScreenButtons);
             startScreen.Hide();
 
-            networkScreen = new NetworkGameSelectScreen(this, spriteBatch,spriteFont, blankBlackTexture);
+            networkScreen = new NetworkGameSelectScreen(this, spriteBatch, spriteFont, blankBlackTexture);
             Components.Add(networkScreen);
+            networkScreen.ButtonClicked += new NetworkGameSelectScreen.ClickEvent(HandleNetworkSelectScreenButtons);
             networkScreen.Hide();
 
             joinGameScreen = new JoinNetworkGameScreen(this, spriteBatch, formFont, blankBlackTexture);
@@ -109,6 +118,7 @@ namespace MonoGameServer
 
 
             activeScreen = startScreen;
+            //activeScreen = joinGameScreen;
             activeScreen.Show();
 
             IsMouseVisible = true;
@@ -127,12 +137,13 @@ namespace MonoGameServer
             keyboardState = Keyboard.GetState();
             if (activeScreen == startScreen)
             {
-                HandleStartScreen();
+               // HandleStartScreen();
+                //using button events instead
             }
 
             else if (activeScreen == networkScreen)
             {
-                HandleNetworkSelectScreen();
+                //HandleNetworkSelectScreenButtons();
             }
 
             else if (activeScreen == joinGameScreen)
@@ -180,7 +191,7 @@ namespace MonoGameServer
             if (gameType == Client.Client.GameType.local)
                 maxConnections = 1;
             else
-                maxConnections = Int32.Parse(hostGameScreen.MaxConnections);
+                maxConnections = hostGameScreen.MaxConnections;
 
             server = new Server.Server(this, spriteBatch, gameConfigName, maxConnections);
             Components.Add(server);
@@ -202,9 +213,25 @@ namespace MonoGameServer
             return keyboardState.IsKeyUp(key) && oldKeyboardState.IsKeyDown(key);
         }
 
-        private void HandleStartScreen()
+        private void HandleStartScreenButtons(Control sender)
         {
-            if (CheckKey(Keys.Enter))
+            if (sender.Name == "StartGame")
+            {
+                gameType = Client.Client.GameType.local;
+                StartServer(gameType);
+            }
+            if (sender.Name == "NetworkGame")
+            {
+                activeScreen.Hide();
+                activeScreen = networkScreen;
+                activeScreen.Show();
+            }
+            if (sender.Name == "QuitGame")
+            {
+                this.Exit();
+            }
+
+           /* if (CheckKey(Keys.Enter))
             {
                 if (startScreen.SelectedIndex == 0) //start
                 {
@@ -226,11 +253,33 @@ namespace MonoGameServer
                 {
                     this.Exit();
                 }
-            }
+            }*/
         }
 
-        private void HandleNetworkSelectScreen()
+        private void HandleNetworkSelectScreenButtons(Control sender)
         {
+            if (sender.Name == "HostGame")
+            {
+                gameType = Client.Client.GameType.hosted;
+                activeScreen.Hide();
+                activeScreen = hostGameScreen;
+                activeScreen.Show();
+            }
+            if (sender.Name == "JoinGame")
+            {
+                //load join screen
+                activeScreen.Hide();
+                activeScreen = joinGameScreen;
+                activeScreen.Show();
+            }
+            if (sender.Name == "BackButton")
+            {
+                //go back to startScreen
+                activeScreen.Hide();
+                activeScreen = startScreen;
+                activeScreen.Show();
+            }
+            /*
             if(CheckKey(Keys.Enter))
             {
                 if (networkScreen.SelectedIndex == 0)
@@ -256,7 +305,7 @@ namespace MonoGameServer
                     activeScreen = startScreen;
                     activeScreen.Show();
                 }
-            }
+            }*/
         }
 
         private void HandleJoinGameScreenButtons(Control sender)
