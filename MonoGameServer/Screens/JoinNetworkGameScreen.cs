@@ -15,7 +15,7 @@ namespace MonoGameServer.Screens
 
         //Fuchs GUI components
         Form connectionMethodForm;
-        Button sendButton, lanButton;
+        Button sendButton, lanButton, backButton;
         TextBox textBoxIP, textBoxPort;
 
         Rectangle imageRectangle;
@@ -47,17 +47,20 @@ namespace MonoGameServer.Screens
             connectButtonSize = spriteFont.MeasureString("Connect");
             lanButton = new Button("ScanLan", "Scan LAN", new Rectangle(32,30,(int)lanButtonSize.X + 10, (int)lanButtonSize.Y + 10), buttonTexture, spriteFont, Color.White);
             sendButton = new Button("Connect", "Connect", new Rectangle(32,151,(int)connectButtonSize.X + 10, (int)connectButtonSize.Y + 10), buttonTexture, spriteFont, Color.White);
+            backButton = new Button("BackButton", @"Back", new Rectangle(32, 192, 95, 23), buttonTexture, spriteFont, Color.White);
             textBoxIP = new TextBox("Address", "",100,new Rectangle(32,110,232,20), textboxTexture, spriteFont, Color.Black);
             textBoxPort = new TextBox("Port", "", 8, new Rectangle(288,110,60,20), textboxTexture, spriteFont, Color.Black);
 
             connectionMethodForm.AddControl(lanButton);
             connectionMethodForm.AddControl(sendButton);
+            connectionMethodForm.AddControl(backButton);
             connectionMethodForm.AddControl(textBoxIP);
             connectionMethodForm.AddControl(textBoxPort);
 
             lanButton.onClick += new EHandler(ButtonClick);
             sendButton.onClick += new EHandler(ButtonClick);
-
+            backButton.onClick += new EHandler(ButtonClick);
+                
             
             imageRectangle = new Rectangle(0, 0, Game.Window.ClientBounds.Width, Game.Window.ClientBounds.Height);
         }

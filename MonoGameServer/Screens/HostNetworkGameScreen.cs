@@ -18,7 +18,8 @@ namespace MonoGameServer.Screens
 
         //Fuchs GUI components
         Form hostGameForm;
-        Button startButton;
+        Button startButton, backButton;
+        Label maxConnectionsLabel, portLabel;
         TextBox textBoxMaxConnections, textBoxPort;
 
         Rectangle imageRectangle;
@@ -46,14 +47,23 @@ namespace MonoGameServer.Screens
             Vector2 startButtonSize;
             startButtonSize = spriteFont.MeasureString("Start Game");
             startButton = new Button("Start", "Start Game", new Rectangle(19, 160, (int)startButtonSize.X + 10, (int)startButtonSize.Y + 10), buttonTexture, spriteFont, Color.White);
+            backButton = new Button("BackButton", @"Back", new Rectangle(19, 180, 95, 23), buttonTexture, spriteFont, Color.White);
+            
             textBoxMaxConnections = new TextBox("MaxConnections", "10", 100, new Rectangle(19, 76, 60, 20), textboxTexture, spriteFont, Color.Black);
+            maxConnectionsLabel = new Label("maxConnectionsLabel", @"Max Connections", new Vector2(19, 51), spriteFont, Color.White, 0, 0);
+           
             textBoxPort = new TextBox("Port", "14242", 8, new Rectangle(19, 125, 60, 20), textboxTexture, spriteFont, Color.Black);
+            portLabel = new Label("portLabel", @"Port", new Vector2(19, 100), spriteFont, Color.White, 0, 0);
 
             hostGameForm.AddControl(startButton);
+            hostGameForm.AddControl(backButton);
             hostGameForm.AddControl(textBoxMaxConnections);
+            hostGameForm.AddControl(maxConnectionsLabel);
             hostGameForm.AddControl(textBoxPort);
+            hostGameForm.AddControl(portLabel);
 
             startButton.onClick += new EHandler(ButtonClick);
+            backButton.onClick += new EHandler(ButtonClick);
 
             imageRectangle = new Rectangle(0, 0, Game.Window.ClientBounds.Width, Game.Window.ClientBounds.Height);
         
@@ -75,11 +85,6 @@ namespace MonoGameServer.Screens
         {
             spriteBatch.Draw(background, imageRectangle, Color.White);
             hostGameForm.Draw(spriteBatch);
-            //lanButton.Draw(spriteBatch);
-            //sendButton.Draw(spriteBatch);
-            //textBoxIP.Draw(spriteBatch);
-            //textBoxPort.Draw(spriteBatch);
-
             base.Draw(gameTime);
         }
 

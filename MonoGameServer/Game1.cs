@@ -279,33 +279,6 @@ namespace MonoGameServer
                 activeScreen = startScreen;
                 activeScreen.Show();
             }
-            /*
-            if(CheckKey(Keys.Enter))
-            {
-                if (networkScreen.SelectedIndex == 0)
-                {
-                    gameType = Client.Client.GameType.hosted;
-                    activeScreen.Hide();
-                    activeScreen = hostGameScreen;
-                    activeScreen.Show();
-                    //Load Host Screen
-                    //for now just start the defualt server with defualt port
-                }
-                if (networkScreen.SelectedIndex == 1)
-                {
-                    //load join screen
-                    activeScreen.Hide();
-                    activeScreen = joinGameScreen;
-                    activeScreen.Show();
-                }
-                if (networkScreen.SelectedIndex == 2)
-                {
-                    //go back to startScreen
-                    activeScreen.Hide();
-                    activeScreen = startScreen;
-                    activeScreen.Show();
-                }
-            }*/
         }
 
         private void HandleJoinGameScreenButtons(Control sender)
@@ -322,6 +295,12 @@ namespace MonoGameServer
                 gameType = Client.Client.GameType.hosted;
                 Console.WriteLine("Connect to {0}:{1}", joinGameScreen.Address, joinGameScreen.Port);
             }
+            if (sender.Name == "BackButton")
+            {
+                activeScreen.Hide();
+                activeScreen = networkScreen;
+                activeScreen.Show();
+            }
         }
 
         private void HandleHostGameScreenButtons(Control sender)
@@ -330,6 +309,12 @@ namespace MonoGameServer
             {
                 gameType = Client.Client.GameType.hosted;
                 StartServer(gameType);
+            }
+            if (sender.Name == "BackButton")
+            {
+                activeScreen.Hide();
+                activeScreen = networkScreen;
+                activeScreen.Show();
             }
 
         }
