@@ -39,21 +39,26 @@ namespace MonoGameServer.Screens
             
             this.background = background;
             formBackground = game.Content.Load<Texture2D>("alienmetal");
-            hostGameForm = new Form("Host", "Host a Game", new Rectangle(121, 200, 425, 200), formBackground, spriteFont, Color.White);
             buttonTexture = game.Content.Load<Texture2D>("buttonTexture");
             textboxTexture = game.Content.Load<Texture2D>("textboxTexture");
 
+            //center the form ont he screen
+            Rectangle center = this.CenterGUIForm(242, 224);
+            hostGameForm = new Form("Host", "Host a Game", new Rectangle(center.X, center.Y, center.Width, center.Height), formBackground, spriteFont, Color.White);
+
             //figure out the width and heigh of the text on the buttons
-            Vector2 startButtonSize;
+            Vector2 startButtonSize, backButtonSize;
             startButtonSize = spriteFont.MeasureString("Start Game");
-            startButton = new Button("Start", "Start Game", new Rectangle(19, 160, (int)startButtonSize.X + 10, (int)startButtonSize.Y + 10), buttonTexture, spriteFont, Color.White);
-            backButton = new Button("BackButton", @"Back", new Rectangle(19, 180, 95, 23), buttonTexture, spriteFont, Color.White);
+            backButtonSize = spriteFont.MeasureString("Back");
+
+            startButton = new Button("Start", "Start Game", new Rectangle(6, 186, (int)startButtonSize.X + 10, (int)startButtonSize.Y + 10), buttonTexture, spriteFont, Color.White);
+            backButton = new Button("BackButton", @"Back", new Rectangle(132, 186,  (int)startButtonSize.X + 10, (int)startButtonSize.Y + 10), buttonTexture, spriteFont, Color.White);
             
-            textBoxMaxConnections = new TextBox("MaxConnections", "10", 100, new Rectangle(19, 76, 60, 20), textboxTexture, spriteFont, Color.Black);
-            maxConnectionsLabel = new Label("maxConnectionsLabel", @"Max Connections", new Vector2(19, 51), spriteFont, Color.White, 0, 0);
+            textBoxMaxConnections = new TextBox("MaxConnections", "10", 100, new Rectangle(11, 42, 60, 20), textboxTexture, spriteFont, Color.Black);
+            maxConnectionsLabel = new Label("maxConnectionsLabel", @"Max Connections", new Vector2(8, 26), spriteFont, Color.White, 0, 0);
            
-            textBoxPort = new TextBox("Port", "14242", 8, new Rectangle(19, 125, 60, 20), textboxTexture, spriteFont, Color.Black);
-            portLabel = new Label("portLabel", @"Port", new Vector2(19, 100), spriteFont, Color.White, 0, 0);
+            textBoxPort = new TextBox("Port", "14242", 8, new Rectangle(11, 116, 60, 20), textboxTexture, spriteFont, Color.Black);
+            portLabel = new Label("portLabel", @"Port", new Vector2(8, 91), spriteFont, Color.White, 0, 0);
 
             hostGameForm.AddControl(startButton);
             hostGameForm.AddControl(backButton);

@@ -84,6 +84,27 @@ namespace MonoGameServer.Screens
             this.Enabled = false;
         }
 
+        public virtual void UnPause()
+        {
+            this.Enabled = true;
+        }
+
+     
+        /// <summary>
+        /// plug in the FuchsGUI form width and height and it will center the menu on the screen.
+        /// Mostly helpful for the main menu style screens
+        /// </summary>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <returns></returns>
+        public virtual Rectangle CenterGUIForm(int width, int height)
+        {
+            Rectangle formLocation;
+            Vector2 center = new Vector2((this.windowSize.Width - width) / 2, (this.windowSize.Height - height) / 2);
+            return new Rectangle((int)center.X, (int)center.Y, width, height);
+        }
+
+
     }
 }
 
